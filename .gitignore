@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+firmware/BadgeForth.X/nbproject/private/
+# backups
+*~
+/firmware/BadgeForth.X/build/default/
+/firmware/BadgeForth.X/dist/default/
