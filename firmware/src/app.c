@@ -1,9 +1,9 @@
 /*******************************************************************************
   MPLAB Harmony Application Source File
-  
+
   Company:
     Microchip Technology Inc.
-  
+
   File Name:
     app.c
 
@@ -11,8 +11,8 @@
     This file contains the source code for the MPLAB Harmony application.
 
   Description:
-    This file contains the source code for the MPLAB Harmony application.  It 
-    implements the logic of the application's state machine and it may call 
+    This file contains the source code for the MPLAB Harmony application.  It
+    implements the logic of the application's state machine and it may call
     API routines of other MPLAB Harmony modules in the system, such as drivers,
     system services, and middleware.  However, it does not call any of the
     system interfaces (such as the "Initialize" and "Tasks" functions) of any of
@@ -49,11 +49,12 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Included Files 
+// Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
 
 #include "app.h"
+#include "forth.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -72,7 +73,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
   Remarks:
     This structure should be initialized by the APP_Initialize function.
-    
+
     Application strings and buffers are be defined outside this structure.
 */
 
@@ -249,9 +250,6 @@ void APP_USBDeviceEventHandler ( USB_DEVICE_EVENT event, void * eventData, uintp
     }
 }
 
-/* TODO:  Add any necessary callback functions.
-*/
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Local Functions
@@ -261,9 +259,9 @@ void APP_USBDeviceEventHandler ( USB_DEVICE_EVENT event, void * eventData, uintp
 /******************************************************************************
   Function:
     static void USB_TX_Task (void)
-    
+
    Remarks:
-    Feeds the USB write function. 
+    Feeds the USB write function.
 */
 static void USB_TX_Task (void)
 {
@@ -273,13 +271,13 @@ static void USB_TX_Task (void)
     }
     else
     {
-        /* Schedule a write if data is pending 
+        /* Schedule a write if data is pending
          */
         if ((appData.writeLen > 0)/* && (appData.writeTransferHandle == USB_DEVICE_CDC_TRANSFER_HANDLE_INVALID)*/)
         {
             USB_DEVICE_CDC_Write(USB_DEVICE_CDC_INDEX_0,
                                  &appData.writeTransferHandle,
-                                 writeBuffer, 
+                                 writeBuffer,
                                  appData.writeLen,
                                  USB_DEVICE_CDC_TRANSFER_FLAGS_DATA_COMPLETE);
         }
@@ -289,9 +287,9 @@ static void USB_TX_Task (void)
 /******************************************************************************
   Function:
     static void USB_RX_Task (void)
-    
+
    Remarks:
-    Reads from the USB. 
+    Reads from the USB.
 */
 static void USB_RX_Task(void)
 {
@@ -308,15 +306,23 @@ static void USB_RX_Task(void)
         if((appData.readProcessedLen < 8) && (appData.readTransferHandle  == USB_DEVICE_CDC_TRANSFER_HANDLE_INVALID))
         {
             USB_DEVICE_CDC_Read (USB_DEVICE_CDC_INDEX_0,
-                                 &appData.readTransferHandle, 
+                                 &appData.readTransferHandle,
                                  readBuffer,
                                  APP_USB_CDC_COM_PORT_SINGLE_READ_BUFFER_SIZE);
         };
     }
 }
 
-/* TODO:  Add any necessary local functions.
-*/
+/**
+ * Forth_Task
+ *
+ * Checks pending input for Forth command
+ * if has message and forth not started:
+ *     allocate memory for user's forth dictionary
+ *     start forth task
+ * if has message:
+ *     notify forth task
+ */
 
 
 // *****************************************************************************
@@ -338,6 +344,8 @@ void APP_Initialize ( void )
     /* Place the App state machine in its initial state. */
     appData.state = APP_STATE_INIT;
 
+    /* we only start Forth subsystem if we see a Forth command */
+    appData.forth_running = false;
 
     /* Device Layer Handle  */
     appData.deviceHandle = USB_DEVICE_HANDLE_INVALID ;
@@ -359,11 +367,11 @@ void APP_Initialize ( void )
 
     /* Write Transfer Handle */
     appData.writeTransferHandle = USB_DEVICE_CDC_TRANSFER_HANDLE_INVALID;
-    
+
     /*Initialize the write data */
     appData.writeLen = sizeof(writeString);
 	memcpy(writeBuffer, writeString, appData.writeLen);
-    
+
     /* TODO: Initialize your application's state machine and other
      * parameters.
      */
@@ -388,7 +396,7 @@ void APP_Tasks ( void )
         case APP_STATE_INIT:
         {
             bool appInitialized = true;
-       
+
 
             /* Open the device layer */
             if (appData.deviceHandle == USB_DEVICE_HANDLE_INVALID)
@@ -397,14 +405,14 @@ void APP_Tasks ( void )
                                                DRV_IO_INTENT_READWRITE );
                 appInitialized &= ( USB_DEVICE_HANDLE_INVALID != appData.deviceHandle );
             }
-        
+
             if (appInitialized)
             {
 
                 /* Register a callback with device layer to get event notification (for end point 0) */
                 USB_DEVICE_EventHandlerSet(appData.deviceHandle,
                                            APP_USBDeviceEventHandler, 0);
-            
+
                 appData.state = APP_STATE_SERVICE_TASKS;
             }
             break;
@@ -414,12 +422,12 @@ void APP_Tasks ( void )
         {
             USB_RX_Task();
             USB_TX_Task();
-        
+
             break;
         }
 
         /* TODO: implement your application state machine.*/
-        
+
 
         /* The default state should never be executed. */
         default:
@@ -430,7 +438,6 @@ void APP_Tasks ( void )
     }
 }
 
- 
 
 /*******************************************************************************
  End of File
