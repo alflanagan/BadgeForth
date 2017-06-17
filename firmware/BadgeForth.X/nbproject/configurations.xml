@@ -28,6 +28,7 @@
           </logicalFolder>
         </logicalFolder>
         <itemPath>../src/app.h</itemPath>
+        <itemPath>../src/include/forth.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">
@@ -112,6 +113,8 @@
         </logicalFolder>
         <itemPath>../src/app.c</itemPath>
         <itemPath>../src/main.c</itemPath>
+        <itemPath>../src/forth.c</itemPath>
+        <itemPath>../src/paulforth.S</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f3" displayName="driver" projectFiles="true">
@@ -209,7 +212,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/system_config/default;../src/default"/>
+                  value="../src;../src/include;../src/system_config/default;../src/default"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -235,9 +238,9 @@
         <property key="exclude-floating-point-library" value="false"/>
         <property key="expand-macros" value="false"/>
         <property key="extra-include-directories-for-assembler"
-                  value="../src/system_config/default"/>
+                  value="../src/system_config/default;../src/include"/>
         <property key="extra-include-directories-for-preprocessor"
-                  value="../src/system_config/default"/>
+                  value="../src/system_config/default;../src/include"/>
         <property key="false-conditionals" value="false"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>

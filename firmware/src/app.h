@@ -65,7 +65,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 extern "C" {
 
 #endif
-// DOM-IGNORE-END 
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
@@ -135,15 +135,18 @@ typedef struct
 
     /* Length of data read */
     uint32_t readLen;
-    
+
     /* Length of read data processed */
     uint32_t readProcessedLen;
 
     /* Write transfer handle */
     USB_DEVICE_CDC_TRANSFER_HANDLE writeTransferHandle;
-    
+
     /* Length of data to be written */
     uint32_t writeLen;
+
+    /* flag -- is Forth subsystem running? */
+    bool forth_running;
 
 } APP_DATA;
 
@@ -155,7 +158,7 @@ typedef struct
 // *****************************************************************************
 /* These routines are called by drivers when certain events occur.
 */
-	
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Initialization and State Machine Functions
@@ -170,8 +173,8 @@ typedef struct
      MPLAB Harmony application initialization routine.
 
   Description:
-    This function initializes the Harmony application.  It places the 
-    application in its initial state and prepares it to run so that its 
+    This function initializes the Harmony application.  It places the
+    application in its initial state and prepares it to run so that its
     APP_Tasks function can be called.
 
   Precondition:

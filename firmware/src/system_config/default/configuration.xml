@@ -337,6 +337,7 @@
         <Name dnOrder="0">app.c</Name>
         <Path dnOrder="1">Source Files/app</Path>
         <Checksum dnOrder="2">96104A3C20F7AE6F2B2AB92C12D57AFD</Checksum>
+        <ProjectFileChecksum dnOrder="3">2489BA5BBE6032AF7F3CA34C062F8D6A</ProjectFileChecksum>
       </Template>
       <Template dnOrder="7">
         <Name dnOrder="0">drv_flash_static.h</Name>
